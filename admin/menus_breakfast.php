@@ -1,189 +1,138 @@
 <?php
 include "header.php";
+// include "db_connection.php"; // Ensure database connection is included
+
 $btnname = "submit";
-if (isset($_REQUEST['submit'])) {
-    if (isset($_FILES['uploadfile'])) {
-        $imagename = "default.jfif";
+$imagename = "default.jfif";
+
+// Handle form submission for adding/updating breakfast items
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $bname = $_POST['bname'] ?? '';
+    $bprice = $_POST['bprice'] ?? '';
+    $bdesc = $_POST['bdesc'] ?? '';
+
+    if (!empty($_FILES['uploadfile']['name'])) {
         $filename = $_FILES["uploadfile"]["name"];
         $tempname = $_FILES["uploadfile"]["tmp_name"];
         $folder = "../assets/img/menu" . $filename;
-        if ($filename == "") {
-        } else {
-            move_uploaded_file($tempname, $folder);
+
+        if (move_uploaded_file($tempname, $folder)) {
             $imagename = $filename;
         }
-    } else {
-        $imagename = "default.jfif";
     }
-    $bname = $_REQUEST['bname'];
-    $bprice = $_REQUEST['bprice'];
-    $bdesc = $_REQUEST['bdesc'];
 
-    $qry = "insert into breakfast set breakfastname	='$bname',breakfastprice='$bprice',breakfastdesc ='$bdesc',breakfastimg='$imagename'";
-    $result = mysqli_query($conn, $qry);
-
-    if ($result) {
-        header('location:menus_breakfast.php');
-        exit;
+    if (isset($_POST['update'])) {
+        // Updating record
+        $edit_id = $_POST['edit_id'];
+        $update_qry = "UPDATE breakfast SET 
+                        breakfastname='$bname',
+                        breakfastprice='$bprice',
+                        breakfastdesc='$bdesc',
+                        breakfastimg='$imagename' 
+                      WHERE id=$edit_id";
+        mysqli_query($conn, $update_qry);
+        echo "<script>window.location='menus_breakfast.php';</script>";
     } else {
-        echo "data not submitted";
+        // Inserting new record
+        $qry = "INSERT INTO breakfast (breakfastname, breakfastprice, breakfastdesc, breakfastimg) 
+                VALUES ('$bname', '$bprice', '$bdesc', '$imagename')";
+        mysqli_query($conn, $qry);
+        echo "<script>window.location='menus_breakfast.php';</script>";
     }
 }
 
-if (isset($_GET['id'])) {
-    if (isset($_GET['action']) && $_GET['action'] == 'del') {
-        $del_id = $_GET['id'];
-        $del_qry = "delete from breakfast where id ='$del_id'";
-        $del_res = mysqli_query($conn, $del_qry);
-        if ($del_res) {
-            echo
-            "<script>
-            window.location='menus_breakfast.php';
-            </script>";
-        } else {
-            echo "error!!!";
-        }
-    } elseif (isset($_GET['action']) && $_GET['action'] == 'edit') {
-        //data fetch for edit
-
-        if ($_GET['action'] == "edit") {
-            $edit_id = $_GET['id'];
-            $show_qry = "select * from breakfast where id='$edit_id'";
-            $show_res = mysqli_query($conn, $show_qry);
-            $mydata = mysqli_fetch_assoc($show_res);
-            $btnname = "update";
-        }
-    }
+// Handle delete request
+if (isset($_GET['action']) && $_GET['action'] == 'del' && isset($_GET['id'])) {
+    $del_id = $_GET['id'];
+    mysqli_query($conn, "DELETE FROM breakfast WHERE id ='$del_id'");
+    echo "<script>window.location='menus_breakfast.php';</script>";
 }
 
-if (isset($_REQUEST['update'])) {
-    $edit_id = $_REQUEST['edit_id'];
-    $bname = $_REQUEST['bname'];
-    $bprice = $_REQUEST['bprice'];
-    $bdesc = $_REQUEST['bdesc'];
-    $bimg = $_REQUEST['uploadfile'];
-
-    if (isset($_FILES['uploadfile'])) {
-        $imagename = "default.jfif";
-        $filename = $_FILES["uploadfile"]["name"];
-        $tempname = $_FILES["uploadfile"]["tmp_name"];
-        $folder = "../assets/img/menu" . $filename;
-        if ($filename == "") {
-        } else {
-            move_uploaded_file($tempname, $folder);
-            $imagename = $filename;
-        }
-    } else {
-        $imagename = $mydata['foodimg'];
-    }
-
-    $uptqry = "update breakfast set breakfastname='$bname',breakfastprice='$bprice',breakfastdesc='$bdesc',breakfastimg='$bimg' where id=$edit_id";
-    $uptres = mysqli_query($conn, $uptqry);
-
-    if ($uptres) {
-        echo "Data updated";
-    } else {
-        echo "error";
-    }
-
-    echo "<script>window.location='menus_breakfast.php'</script>";
+// Handle edit request
+if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['id'])) {
+    $edit_id = $_GET['id'];
+    $show_res = mysqli_query($conn, "SELECT * FROM breakfast WHERE id='$edit_id'");
+    $mydata = mysqli_fetch_assoc($show_res);
+    $btnname = "update";
 }
 
-$getdata = "select * from breakfast";
-$get_res = mysqli_query($conn, $getdata);
-
+// Fetch data to display in the table
+$get_res = mysqli_query($conn, "SELECT * FROM breakfast");
 ?>
-
 
 <div class="container-fluid">
     <div class="row">
         <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
-            <?php include "sidebar.php" ?>
+            <?php include "sidebar.php"; ?>
         </div>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Add Breakfast</h1>
-
             </div>
+
             <form method="post" enctype="multipart/form-data">
                 <?php if (isset($mydata)) { ?>
                     <input type="hidden" name="edit_id" value="<?php echo $mydata['id']; ?>">
                 <?php } ?>
                 <div class="row g-3">
                     <div class="col">
-                        <label for="">Food name</label>
-                        <input type="text" class="form-control" value="<?php if (isset($mydata)) echo $mydata['breakfastname']; ?>" aria-label="Event Name" name="bname">
+                        <label for="">Food Name</label>
+                        <input type="text" class="form-control" name="bname" value="<?php echo $mydata['breakfastname'] ?? ''; ?>" required>
                     </div>
                     <div class="col">
                         <label for="">Food Price</label>
-                        <input type="text" class="form-control" placeholder="Event Price" aria-label="Event Price" name="bprice" value=" <?php if (isset($mydata)) echo $mydata['breakfastprice']; ?>">
-
+                        <input type="text" class="form-control" name="bprice" value="<?php echo $mydata['breakfastprice'] ?? ''; ?>" required>
                     </div>
-
                 </div>
                 <div class="row g-3 mt-4">
                     <div class="col">
                         <label for="">Food Description</label>
-                        <input type="text" class="form-control" placeholder="Event Description" aria-label="Event image" name="bdesc" value=" <?php if (isset($mydata)) echo $mydata['breakfastdesc']; ?>">
-                        <button type="submit" name="<?php echo $btnname; ?>" class="btn btn-dark mt-3"><?php echo $btnname; ?></button>
+                        <input type="text" class="form-control" name="bdesc" value="<?php echo $mydata['breakfastdesc'] ?? ''; ?>" required>
                     </div>
                     <div class="col">
                         <label for="">Food Image</label>
-                        <input type="file" class="form-control" placeholder="Event Image" aria-label="Event image" name="uploadfile" value=" <?php if (isset($mydata)) echo $mydata['breakfastimg']; ?>">
-
+                        <input type="file" class="form-control" name="uploadfile">
+                        <?php if (isset($mydata['breakfastimg'])) { ?>
+                            <img src="../assets/img/menu<?php echo $mydata['breakfastimg']; ?>" width="100px">
+                        <?php } ?>
                     </div>
-
                 </div>
+                <button type="submit" name="<?php echo $btnname; ?>" class="btn btn-dark mt-3"><?php echo ucfirst($btnname); ?></button>
             </form>
 
             <table class="table table-striped table-dark mt-4">
                 <thead>
                     <tr>
-                        <th scope="col">id</th>
-                        <th scope="col">Event Name</th>
-                        <th scope="col">Event Price</th>
-                        <th scope="col">Event Description</th>
-                        <th scope="col">Event Image</th>
-                        <th scope="col">Actions</th>
+                        <th>ID</th>
+                        <th>Food Name</th>
+                        <th>Food Price</th>
+                        <th>Food Description</th>
+                        <th>Food Image</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    $i = 1;
-                    foreach ($get_res as $getdata) {
-                    ?>
+                    <?php $i = 1; while ($data = mysqli_fetch_assoc($get_res)) { ?>
                         <tr>
-                            <th scope="row"><?php echo $i; ?></th>
-                            <td><?php echo $getdata['breakfastname']; ?></td>
-                            <td><?php echo $getdata['breakfastprice']; ?></td>
-                            <td><?php echo $getdata['breakfastdesc']; ?></td>
-                            <td><?php echo $getdata['breakfastimg']; ?></td>
-                            <td><a href='menus_breakfast.php?action=del&id=<?php echo $getdata["id"] ?>' class="btn btn-danger">
-                                    <i class="bi bi-trash-fill"></i>
-                                </a>
-                                <a href='menus_breakfast.php?action=edit&id=<?php echo $getdata["id"] ?>' class="btn btn-danger">
-                                    Edit
-                                </a>
+                            <td><?php echo $i++; ?></td>
+                            <td><?php echo $data['breakfastname']; ?></td>
+                            <td><?php echo $data['breakfastprice']; ?></td>
+                            <td><?php echo $data['breakfastdesc']; ?></td>
+                            <td><img src="../assets/img/menu<?php echo $data['breakfastimg']; ?>" width="100px"></td>
+                            <td>
+                                <a href="menus_breakfast.php?action=del&id=<?php echo $data['id']; ?>" class="btn btn-danger">Delete</a>
+                                <a href="menus_breakfast.php?action=edit&id=<?php echo $data['id']; ?>" class="btn btn-warning">Edit</a>
                             </td>
                         </tr>
-                    <?php $i++;
-                    } ?>
+                    <?php } ?>
                 </tbody>
             </table>
-
-
-
-
-
         </main>
     </div>
 </div>
 
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
 <script src="dashboard.js"></script>
 </body>
-
 </html>

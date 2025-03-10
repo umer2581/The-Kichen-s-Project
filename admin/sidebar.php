@@ -69,22 +69,7 @@
           Chefs
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link d-flex align-items-center gap-2" href="#">
-          <svg class="bi">
-            <use xlink:href="#graph-up" />
-          </svg>
-          Reports
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link d-flex align-items-center gap-2" href="#">
-          <svg class="bi">
-            <use xlink:href="#puzzle" />
-          </svg>
-          Forms
-        </a>
-      </li>
+
     </ul>
 
     <ul class="nav flex-column mb-auto">

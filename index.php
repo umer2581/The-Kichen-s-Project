@@ -34,7 +34,7 @@ $dinnerfin = mysqli_query($conn, $dinnerqry);
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>The Kichen's- Serve Every Bite</title>
+  <title>The Naaz's Kitchen- Serve Every Bite</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -65,7 +65,7 @@ $dinnerfin = mysqli_query($conn, $dinnerqry);
 
       <a href="index.php" class="logo d-flex align-items-center me-auto me-xl-0">
 
-        <h1 class="sitename">The Kichen's</h1>
+        <h1 class="sitename">The Naaz's Kitchen</h1>
 
       </a>
 
@@ -155,7 +155,7 @@ $dinnerfin = mysqli_query($conn, $dinnerqry);
 
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="why-box">
-              <h3>Why Choose Yummy</h3>
+              <h3>Why Choose Naaz's</h3>
               <p>
                 <?php echo $arr_data['whywe']; ?>
               </p>
@@ -250,7 +250,7 @@ $dinnerfin = mysqli_query($conn, $dinnerqry);
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Our Menu</h2>
-        <p><span>Check Our</span> <span class="description-title">Yummy Menu</span></p>
+        <p><span>Check Our</span> <span class="description-title">Naaz's Menu</span></p>
       </div><!-- End Section Title -->
 
       <div class="container">
