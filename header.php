@@ -19,11 +19,11 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
-    
-    
+    <!-- Favicons -->
+  <link href="assets/img/title-logo.jpg" rel="icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>The Naaz's Kitchen</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./assest/css/bootstrap.min.css"  type="text/css" rel="stylesheet">

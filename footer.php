@@ -6,8 +6,8 @@
       <i class="bi bi-geo-alt icon"></i>
       <div class="address">
         <h4>Address</h4>
-        <p>A108 Adam Street</p>
-        <p>New York, NY 535022</p>
+        <p>Kamla Nehru Nagar</p>
+        <p>2nd Extention Jodhpur</p>
         <p></p>
       </div>
 
@@ -18,8 +18,8 @@
       <div>
         <h4>Contact</h4>
         <p>
-          <strong>Phone:</strong> <span>+1 5589 55488 55</span><br>
-          <strong>Email:</strong> <span>info@example.com</span><br>
+          <strong>Phone:</strong> <span>+91 12345 12345</span><br>
+          <strong>Email:</strong> <span>naazkitchen@gmail.com</span><br>
         </p>
       </div>
     </div>
@@ -38,10 +38,10 @@
     <div class="col-lg-3 col-md-6">
       <h4>Follow Us</h4>
       <div class="social-links d-flex">
-        <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
-        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+        <a href="https://twitter.com" class="twitter"><i class="bi bi-twitter-x"></i></a>
+        <a href="https://facebook.com" class="facebook"><i class="bi bi-facebook"></i></a>
+        <a href="https://instagram.com" class="instagram"><i class="bi bi-instagram"></i></a>
+        <a href="https://linkedin.com" class="linkedin"><i class="bi bi-linkedin"></i></a>
       </div>
     </div>
 
@@ -55,7 +55,7 @@
     <!-- You can delete the links only if you've purchased the pro version. -->
     <!-- Licensing information: https://bootstrapmade.com/license/ -->
     <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-    Designed by <a href="https://TheKichensTeam.com/">The Naaz's Kitchen Team</a>
+    Designed by <a href="https://student.luckyinstitute.org/2024_25/yummy/">The Naaz's Kitchen Team</a>
   </div>
 </div>
 
